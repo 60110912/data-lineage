@@ -1,0 +1,15 @@
+kind: config
+version: 1
+source:
+  database: test
+  user: 60110912
+  host: test
+  encrypPassword:
+target:
+  database: data_lineage
+  user: test
+  host: localhost
+  encrypPassword:
+  
+
+
