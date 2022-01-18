@@ -60,5 +60,31 @@ services:
         KAFKA_RESTART_ATTEMPTS: "10"
         KAFKA_RESTART_DELAY: "5"
         ZOOKEEPER_AUTOPURGE_PURGE_INTERVAL: "0"
+    # jobmanager:
+    #   image: flink:1.13.1-scala_2.12
+    #   expose:
+    #     - "6123"
+    #   ports:
+    #     - "8081:8081"
+    #   command: jobmanager
+    #   environment:
+    #     - JOB_MANAGER_RPC_ADDRESS=jobmanager
+
+    # taskmanager:
+    #   image: flink:1.13.1-scala_2.12
+    #   expose:
+    #     - "6121"
+    #     - "6122"
+    #   depends_on:
+    #     - jobmanager
+    #   command: taskmanager
+    #   links:
+    #     - "jobmanager:jobmanager"
+    #   environment:
+    #     - JOB_MANAGER_RPC_ADDRESS=jobmanager
+    #     - |
+    #       FLINK_PROPERTIES=
+    #       taskmanager.numberOfTaskSlots: 1
+    #       parallelism.default: 1
 volumes:
     logs:
