@@ -19,3 +19,4 @@ RUN buildDeps="sudo make gcc g++ libc-dev" \
 # COPY fluent.conf /fluentd/etc/
 
 USER fluent
+RUN mkdir /fluentd/log_buffer
