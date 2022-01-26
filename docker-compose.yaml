@@ -1,11 +1,11 @@
 version: '3.7'
 services:
-    postgres:
+    source_db:
         image: postgres:14
         environment: 
           - POSTGRES_USER=${DB_USER}
           - POSTGRES_PASSWORD=${DB_PASS}
-          - POSTGRES_DB=${DB_DB}
+          - POSTGRES_DB=source_db
         ports:
           - '6432:5432'
         command:
@@ -61,30 +61,35 @@ services:
         KAFKA_RESTART_DELAY: "5"
         ZOOKEEPER_AUTOPURGE_PURGE_INTERVAL: "0"
     # jobmanager:
-    #   image: flink:1.13.1-scala_2.12
-    #   expose:
-    #     - "6123"
+    #   image: flink:1.14.2-scala_2.11
     #   ports:
     #     - "8081:8081"
     #   command: jobmanager
     #   environment:
-    #     - JOB_MANAGER_RPC_ADDRESS=jobmanager
-
+    #     - |
+    #       FLINK_PROPERTIES=
+    #       jobmanager.rpc.address: jobmanager
     # taskmanager:
-    #   image: flink:1.13.1-scala_2.12
-    #   expose:
-    #     - "6121"
-    #     - "6122"
+    #   image: flink:1.14.2-scala_2.11
     #   depends_on:
     #     - jobmanager
     #   command: taskmanager
-    #   links:
-    #     - "jobmanager:jobmanager"
+    #   scale: 1
     #   environment:
-    #     - JOB_MANAGER_RPC_ADDRESS=jobmanager
     #     - |
     #       FLINK_PROPERTIES=
-    #       taskmanager.numberOfTaskSlots: 1
-    #       parallelism.default: 1
+    #       jobmanager.rpc.address: jobmanager
+    #       taskmanager.numberOfTaskSlots: 2 
+    data_line_db:
+      image: postgres:14
+      environment: 
+        - POSTGRES_USER=${DB_USER}
+        - POSTGRES_PASSWORD=${DB_PASS}
+        - POSTGRES_DB=data_lineage
+      ports:
+        - '7432:5432'
+      volumes:
+        - ./pg_sql/:/docker-entrypoint-initdb.d
+
 volumes:
     logs:
